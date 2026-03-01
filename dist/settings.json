@@ -1,0 +1,59 @@
+{
+  "active_provider": "exchangerate",
+  "providers": {
+    "exchangerate": {
+      "name": "ExchangeRate API (Ücretsiz)",
+      "base_url": "https://open.er-api.com/v6",
+      "api_key": ""
+    }
+  },
+  "cache_ttl_seconds": 600,
+  "tax_settings": {
+    "asgari_ucret_yillik": 396360.0,
+    "ucret_dilimleri": [
+      [
+        190000.0,
+        0.15
+      ],
+      [
+        400000.0,
+        0.2
+      ],
+      [
+        1500000.0,
+        0.27
+      ],
+      [
+        5300000.0,
+        0.35
+      ],
+      [
+        9999999999.0,
+        0.4
+      ]
+    ],
+    "ucret_disi_dilimleri": [
+      [
+        190000.0,
+        0.15
+      ],
+      [
+        400000.0,
+        0.2
+      ],
+      [
+        1000000.0,
+        0.27
+      ],
+      [
+        5300000.0,
+        0.35
+      ],
+      [
+        9999999999.0,
+        0.4
+      ]
+    ]
+  },
+  "last_tab": 2
+}
