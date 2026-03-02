@@ -70,6 +70,18 @@ PyInstaller ile tek dosyalık çalıştırılabilir oluşturabilirsin:
 pyinstaller --onefile --noconsole --name "FinansAsistani" calculators.pyw
 ```
 
+### Yöntem 4: 📱 Mobil Uygulama (Expo Go)
+Masaüstü deneyimini cebine taşı! React Native ve Expo kullanılarak geliştirilen mobil sürümü saniyeler içinde telefonunda deneyebilirsin:
+1. Telefonuna **Expo Go** (App Store / Play Store) uygulamasını indir.
+2. Bilgisayarında `mobile` klasörüne gir:
+   ```bash
+   cd mobile
+   npm install
+   npm start
+   ```
+3. Terminalde çıkan **QR kodu** telefonundaki Expo Go uygulamasıyla tara.
+4. "Okyanus" temalı mobil dashboard anında telefonunda! ✨📱
+
 ---
 
 ## 📜 Lisans
