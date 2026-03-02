@@ -44,6 +44,8 @@ Uygulama, göz yormayan ve premium hissettiren 5 farklı tema seçeneği ile gel
 
 ![Vergi İadesi](assets/tax.png)
 
+![Mobil Görünüm (Android)](assets/tax_android.png)
+
 ---
 
 ## 📦 Kurulum ve Çalıştırma
