@@ -82,6 +82,8 @@ Masaüstü deneyimini cebine taşı! React Native ve Expo kullanılarak gelişti
 3. Terminalde çıkan **QR kodu** telefonundaki Expo Go uygulamasıyla tara.
 4. "Okyanus" temalı mobil dashboard anında telefonunda! ✨📱
 
+> **Not:** Expo Go ile test için Android Studio'ya gerek yoktur. Ancak APK/AAB oluşturmak istersen [Android Studio](https://developer.android.com/studio) kurulumu gerekir.
+
 ---
 
 ## 📜 Lisans
