@@ -1358,6 +1358,362 @@ class TaxTab(QWidget):
 
 
 # ──────────────────────────────────────────────
+#  SEKME 4: BİLEŞİK FAİZ HESAPLAYICISI
+# ──────────────────────────────────────────────
+
+class CompoundInterestTab(QWidget):
+    """Kompakt bileşik kar hesaplayıcısı."""
+
+    FREQ_MAP = {
+        "Günlük": 365,
+        "Haftalık": 52,
+        "Aylık": 12,
+        "3 Aylık": 4,
+        "6 Aylık": 2,
+        "Yıllık": 1,
+    }
+
+    def __init__(self):
+        super().__init__()
+        self._init_ui()
+
+    @staticmethod
+    def _compound_fv(principal: float, monthly: float, years: int,
+                     annual_rate: float, n: int) -> list:
+        """Yıl-yıl (bakiye, toplam_katkı, toplam_faiz) hesaplar."""
+        r = annual_rate / 100
+        # Efektif aylık faiz oranı (nominal n-dönemli faizden türetilir)
+        r_mo = (1 + r / n) ** (n / 12) - 1 if r > 0 else 0.0
+        balance = principal
+        cum = principal          # kümülatif katkı (anapara dahil)
+        out = []
+        for yr in range(1, years + 1):
+            for _ in range(12):
+                balance += monthly
+                cum += monthly
+                balance *= (1 + r_mo)
+            out.append((yr, balance, cum, balance - cum))
+        return out
+
+    # ── Arayüz ─────────────────────────────────
+
+    def _init_ui(self):
+        main_layout = QVBoxLayout(self)
+        main_layout.setSpacing(0)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+
+        # ── Form (scroll area – sabit yükseklik) ──
+        form_widget = QWidget()
+        form_widget.setObjectName("contentWidget")
+        form_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        fbox = QVBoxLayout(form_widget)
+        fbox.setSpacing(10)
+        fbox.setContentsMargins(16, 14, 16, 10)
+
+        hdr = QLabel("📈 Bileşik Kar Hesaplayıcısı")
+        hdr.setObjectName("headerLabel")
+        fbox.addWidget(hdr)
+
+        # Grup 1 & 2 yan yana
+        groups_h = QHBoxLayout()
+        groups_h.setSpacing(12)
+
+        # ── Grup 1: Yatırım & Katkı ──────────────
+        grp1 = QGroupBox("Yatırım & Katkı")
+        g1 = QGridLayout(grp1)
+        g1.setContentsMargins(12, 16, 12, 12)
+        g1.setVerticalSpacing(8)
+        g1.setHorizontalSpacing(16)
+        g1.setColumnStretch(0, 2)
+        g1.setColumnStretch(1, 1)
+
+        g1.addWidget(QLabel("İlk Yatırım"), 0, 0)
+        self.principal_input = QLineEdit("0")
+        self.principal_input.setValidator(QDoubleValidator(0, 999_999_999_999, 2))
+        g1.addWidget(self.principal_input, 0, 1)
+
+        g1.addWidget(QLabel("Aylık Katkı"), 1, 0)
+        self.monthly_input = QLineEdit("5000")
+        self.monthly_input.setValidator(QDoubleValidator(-999_999_999, 999_999_999, 2))
+        g1.addWidget(self.monthly_input, 1, 1)
+
+        g1.addWidget(QLabel("Süre (Yıl)"), 2, 0)
+        self.years_spin = QSpinBox()
+        self.years_spin.setRange(1, 100)
+        self.years_spin.setValue(10)
+        g1.addWidget(self.years_spin, 2, 1)
+
+        groups_h.addWidget(grp1)
+
+        # ── Grup 2: Kar Oranı & Frekans ──────────
+        grp2 = QGroupBox("Kar Oranı & Frekans")
+        g2 = QGridLayout(grp2)
+        g2.setContentsMargins(12, 16, 12, 12)
+        g2.setVerticalSpacing(8)
+        g2.setHorizontalSpacing(16)
+        g2.setColumnStretch(0, 2)
+        g2.setColumnStretch(1, 1)
+
+        g2.addWidget(QLabel("Tahmini Kar Oranı"), 0, 0)
+        self.rate_spin = QDoubleSpinBox()
+        self.rate_spin.setRange(0, 200)
+        self.rate_spin.setValue(10)
+        self.rate_spin.setSuffix("  %")
+        self.rate_spin.setDecimals(2)
+        g2.addWidget(self.rate_spin, 0, 1)
+
+        g2.addWidget(QLabel("Varyans Aralığı"), 1, 0)
+        self.variance_spin = QDoubleSpinBox()
+        self.variance_spin.setRange(0, 100)
+        self.variance_spin.setValue(3)
+        self.variance_spin.setSuffix("  %")
+        self.variance_spin.setDecimals(2)
+        g2.addWidget(self.variance_spin, 1, 1)
+
+        g2.addWidget(QLabel("Bileşik Frekans"), 2, 0)
+        self.freq_combo = QComboBox()
+        self.freq_combo.addItems(list(self.FREQ_MAP.keys()))
+        self.freq_combo.setCurrentIndex(0)  # Günlük
+        g2.addWidget(self.freq_combo, 2, 1)
+
+        groups_h.addWidget(grp2)
+        fbox.addLayout(groups_h)
+
+        # ── Butonlar ─────────────────────────────
+        btn_h = QHBoxLayout()
+        btn_h.addStretch()
+        self.calc_btn = QPushButton("Hesapla")
+        self.calc_btn.setMinimumWidth(130)
+        self.calc_btn.clicked.connect(self._calculate)
+        btn_reset = QPushButton("Sıfırla")
+        btn_reset.setMinimumWidth(100)
+        btn_reset.clicked.connect(self._reset)
+        btn_h.addWidget(self.calc_btn)
+        btn_h.addWidget(btn_reset)
+        fbox.addLayout(btn_h)
+
+        main_layout.addWidget(form_widget)
+
+        # ── Sonuç Bölümü (scroll area dışında, pencereyle büyür) ──
+        self.result_section = QWidget()
+        self.result_section.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        res_v = QVBoxLayout(self.result_section)
+        res_v.setContentsMargins(16, 8, 16, 10)
+        res_v.setSpacing(8)
+
+        cards_w = QWidget()
+        self.cards_h = QHBoxLayout(cards_w)
+        self.cards_h.setSpacing(10)
+        cards_w.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        res_v.addWidget(cards_w)
+
+        if HAS_CHART:
+            self.chart_view = QChartView()
+            self.chart_view.setRenderHint(QPainter.Antialiasing)
+            self.chart_view.setMinimumHeight(260)
+            self.chart_view.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            self.chart_view.setStyleSheet(
+                "border: 1px solid #1e3a5f; border-radius: 12px;"
+            )
+            res_v.addWidget(self.chart_view, stretch=1)
+
+        tbl_hdr = QHBoxLayout()
+        tbl_title = QLabel("Yıllık Büyüme Dökümü")
+        tbl_title.setObjectName("subHeaderLabel")
+        self.tbl_toggle = QPushButton("📊 Tabloyu Göster")
+        self.tbl_toggle.setObjectName("toggleBtn")
+        self.tbl_toggle.clicked.connect(self._show_table_popup)
+        tbl_hdr.addWidget(tbl_title)
+        tbl_hdr.addStretch()
+        tbl_hdr.addWidget(self.tbl_toggle)
+        res_v.addLayout(tbl_hdr)
+
+        self.year_table = QTableWidget()  # veriler buraya yazılır, popup'ta gösterilir
+        self.year_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.year_table.setAlternatingRowColors(True)
+
+        self.result_section.hide()
+        main_layout.addWidget(self.result_section, stretch=1)
+        main_layout.addStretch(0)
+
+    # ── İşlemler ───────────────────────────────
+
+    def _reset(self):
+        self.principal_input.setText("0")
+        self.monthly_input.setText("5000")
+        self.years_spin.setValue(10)
+        self.rate_spin.setValue(10)
+        self.variance_spin.setValue(3)
+        self.freq_combo.setCurrentIndex(0)
+        self.result_section.hide()
+
+    def _calculate(self):
+        try:
+            principal = float(self.principal_input.text().replace(",", ".") or "0")
+        except ValueError:
+            QMessageBox.warning(self, "Hata", "Geçerli bir başlangıç yatırımı girin.")
+            return
+        try:
+            monthly = float(self.monthly_input.text().replace(",", ".") or "0")
+        except ValueError:
+            monthly = 0.0
+
+        years = self.years_spin.value()
+        rate  = self.rate_spin.value()
+        var   = self.variance_spin.value()
+        n     = self.FREQ_MAP[self.freq_combo.currentText()]
+
+        main_res = self._compound_fv(principal, monthly, years, rate, n)
+        low_res  = self._compound_fv(principal, monthly, years, max(0, rate - var), n) if var > 0 else None
+        high_res = self._compound_fv(principal, monthly, years, rate + var, n) if var > 0 else None
+
+        self._show_results(main_res, low_res, high_res, rate, var)
+
+    def _show_results(self, main_res, low_res, high_res, rate, var):
+        # Eski kartları temizle
+        while self.cards_h.count():
+            item = self.cards_h.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+        final_bal     = main_res[-1][1]
+        total_contrib = main_res[-1][2]
+        total_int     = main_res[-1][3]
+
+        def make_card(title: str, amount: float, color: str) -> QFrame:
+            frame = QFrame()
+            frame.setFrameShape(QFrame.StyledPanel)
+            frame.setStyleSheet(
+                f"QFrame {{ border: 2px solid {color}; border-radius: 14px; }}"
+            )
+            cv = QVBoxLayout(frame)
+            cv.setContentsMargins(16, 14, 16, 14)
+            cv.setSpacing(4)
+            t_lbl = QLabel(title)
+            t_lbl.setStyleSheet(
+                f"color:{color}; font-size:10px; font-weight:bold; letter-spacing:1px;"
+            )
+            v_lbl = QLabel(f"{amount:,.2f}")
+            v_lbl.setStyleSheet("font-size:20px; font-weight:bold;")
+            cv.addWidget(t_lbl)
+            cv.addWidget(v_lbl)
+            return frame
+
+        self.cards_h.addWidget(make_card("\U0001f4b0  NİHAİ BAKİYE",  final_bal,     "#00d4ff"))
+        self.cards_h.addWidget(make_card("\U0001f4b5  TOPLAM KATKI",  total_contrib, "#22c55e"))
+        self.cards_h.addWidget(make_card("\U0001f4c8  KAR",           total_int,     "#f59e0b"))
+        if var > 0 and low_res and high_res:
+            self.cards_h.addWidget(make_card(f"\U0001f4c9  DÜŞÜK  (\u2212{var:.1f}%)", low_res[-1][1],  "#ef4444"))
+            self.cards_h.addWidget(make_card(f"\U0001f680  YÜKSEK (+{var:.1f}%)",      high_res[-1][1], "#a855f7"))
+
+        # Grafik
+        if HAS_CHART:
+            chart = QChart()
+            chart.setBackgroundVisible(False)
+            chart.setTitle(f"YILLARA GÖRE BAKİYE GELİŞİMİ  \u2014  Kar Oranı: %{rate:.1f}")
+            chart.setTitleFont(QFont("Arial", 10, QFont.Bold))
+            chart.setTitleBrush(QColor("#a9d6e5"))
+
+            def add_line(res, name, hex_color):
+                s = QLineSeries()
+                s.setName(name)
+                s.setColor(QColor(hex_color))
+                for yr, bal, contrib, _ in res:
+                    s.append(float(yr), bal)
+                chart.addSeries(s)
+                return s
+
+            add_line(main_res, f"Bakiye (Kar %{rate:.1f})", "#00d4ff")
+
+            contrib_s = QLineSeries()
+            contrib_s.setName("Toplam Katkı")
+            contrib_s.setColor(QColor("#22c55e"))
+            for yr, bal, contrib, _ in main_res:
+                contrib_s.append(float(yr), contrib)
+            chart.addSeries(contrib_s)
+
+            if var > 0 and low_res and high_res:
+                add_line(low_res,  f"Düşük (\u2212{var:.1f}%)", "#ef4444")
+                add_line(high_res, f"Yüksek (+{var:.1f}%)",     "#a855f7")
+
+            chart.createDefaultAxes()
+            for ax in chart.axes(Qt.Horizontal):
+                ax.setLabelsBrush(QColor("#a9d6e5"))
+                ax.setTitleBrush(QColor("#a9d6e5"))
+                ax.setTitleText("Yıl")
+            for ax in chart.axes(Qt.Vertical):
+                ax.setLabelsBrush(QColor("#a9d6e5"))
+                ax.setTitleBrush(QColor("#a9d6e5"))
+                ax.setTitleText("Değer")
+
+            chart.legend().setVisible(True)
+            chart.legend().setAlignment(Qt.AlignBottom)
+            chart.legend().setLabelBrush(QColor("#a9d6e5"))
+            self.chart_view.setChart(chart)
+
+        # Yıllık tablo
+        years = len(main_res)
+        self.year_table.clear()
+        self.year_table.setRowCount(years)
+        self.year_table.setColumnCount(4)
+        self.year_table.setHorizontalHeaderLabels(
+            ["Yıl", "Bakiye", "Toplam Katkı", "Kar"]
+        )
+        self.year_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        for yr, bal, contrib, intrs in main_res:
+            row = yr - 1
+            for col, val in enumerate(
+                [str(yr), f"{bal:,.2f}", f"{contrib:,.2f}", f"{intrs:,.2f}"]
+            ):
+                item = QTableWidgetItem(val)
+                item.setTextAlignment(Qt.AlignCenter)
+                self.year_table.setItem(row, col, item)
+
+        self.result_section.show()
+
+    def _show_table_popup(self):
+        if self.year_table.rowCount() == 0:
+            return
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Yıllık Büyüme Dökümü")
+        dlg.resize(560, 480)
+        lay = QVBoxLayout(dlg)
+        lay.setContentsMargins(16, 16, 16, 16)
+        lay.setSpacing(10)
+
+        lbl = QLabel("Yıllık Büyüme Dökümü")
+        lbl.setObjectName("subHeaderLabel")
+        lay.addWidget(lbl)
+
+        # Tablonun kopyasını popup'ta göster
+        popup_table = QTableWidget(self.year_table.rowCount(), self.year_table.columnCount())
+        popup_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        popup_table.setAlternatingRowColors(True)
+        popup_table.setHorizontalHeaderLabels(
+            [self.year_table.horizontalHeaderItem(c).text()
+             for c in range(self.year_table.columnCount())]
+        )
+        popup_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        popup_table.verticalHeader().setVisible(False)
+        for r in range(self.year_table.rowCount()):
+            for c in range(self.year_table.columnCount()):
+                src = self.year_table.item(r, c)
+                if src:
+                    itm = QTableWidgetItem(src.text())
+                    itm.setTextAlignment(Qt.AlignCenter)
+                    popup_table.setItem(r, c, itm)
+        lay.addWidget(popup_table)
+
+        btn_close = QPushButton("Kapat")
+        btn_close.clicked.connect(dlg.accept)
+        btn_h = QHBoxLayout()
+        btn_h.addStretch()
+        btn_h.addWidget(btn_close)
+        lay.addLayout(btn_h)
+        dlg.exec_()
+
+
+# ──────────────────────────────────────────────
 #  ANA PENCERE
 # ──────────────────────────────────────────────
 
@@ -1376,6 +1732,7 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(CurrencyTab(self.settings), "💱 Kur Dönüşümü")
         self.tabs.addTab(PercentTab(), "📊 Yüzde Hesabı")
         self.tabs.addTab(TaxTab(self.settings), "🏛️ Vergi İadesi")
+        self.tabs.addTab(CompoundInterestTab(), "📈 Bileşik Kar")
         self.tabs.setCurrentIndex(last_tab)
         self.tabs.currentChanged.connect(self._on_tab_changed)
         self.setCentralWidget(self.tabs)
@@ -1678,8 +2035,8 @@ class ResultDetailsDialog(QDialog):
         table_lbl.setStyleSheet("font-size: 13px; font-weight: bold; color: #ffffff;")
         main_layout.addWidget(table_lbl)
 
-        self.table = QTableWidget(12, 5)
-        self.table.setHorizontalHeaderLabels(["AY", "ÖDENEN PRİM (₺)", "MATRAH İNDİRİMİ (₺)", "VERGİ İADESİ (₺)", "DURUM"])
+        self.table = QTableWidget(12, 6)
+        self.table.setHorizontalHeaderLabels(["AY", "ÖDENEN PRİM (₺)", "MATRAH İNDİRİMİ (₺)", "VERGİ DİLİMİ (%)", "VERGİ İADESİ (₺)", "DURUM"])
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.table.setMinimumHeight(400) # Tabloyu daha büyük gösteriyoruz
         self.table.setStyleSheet("""
@@ -1706,11 +2063,12 @@ class ResultDetailsDialog(QDialog):
             # Bu demo verisidir - hesaplama mantığına göre basitleştirildi
             self.table.setItem(i, 1, QTableWidgetItem(f"{data['toplam_prim']/12:,.0f}"))
             self.table.setItem(i, 2, QTableWidgetItem(f"{(iade/max(0.01,oran)):,.0f}"))
-            self.table.setItem(i, 3, QTableWidgetItem(f"{iade:,.0f}"))
+            self.table.setItem(i, 3, QTableWidgetItem(f"%{oran*100:.0f}"))
+            self.table.setItem(i, 4, QTableWidgetItem(f"{iade:,.0f}"))
             # Durum belirleme: Geçmiş aylar Ödendi, gelecek aylar Bekliyor
             current_month = datetime.now().month
             durum = "Ödendi" if i + 1 < current_month else ("Bu Ay" if i + 1 == current_month else "Bekliyor")
-            self.table.setItem(i, 4, QTableWidgetItem(durum))
+            self.table.setItem(i, 5, QTableWidgetItem(durum))
             
         main_layout.addWidget(self.table, 1) # Stretch ekledik
 
