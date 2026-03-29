@@ -140,7 +140,47 @@ export const COMMON_CURRENCIES: { [key: string]: string } = {
     "AUD": "Avustralya Doları"
 };
 
-// --- PERCENT LOGIC ---
+// --- COMPOUND INTEREST LOGIC ---
+
+export const FREQ_MAP: { [key: string]: number } = {
+    "Günlük": 365,
+    "Haftalık": 52,
+    "Aylık": 12,
+    "3 Aylık": 4,
+    "6 Aylık": 2,
+    "Yıllık": 1,
+};
+
+export type YearRow = {
+    year: number;
+    balance: number;
+    totalContrib: number;
+    profit: number;
+};
+
+export function compoundFV(
+    principal: number,
+    monthly: number,
+    years: number,
+    annualRate: number,
+    n: number
+): YearRow[] {
+    const r = annualRate / 100;
+    const rMo = r > 0 ? Math.pow(1 + r / n, n / 12) - 1 : 0;
+    let balance = principal;
+    let cum = principal;
+    const out: YearRow[] = [];
+    for (let yr = 1; yr <= years; yr++) {
+        for (let m = 0; m < 12; m++) {
+            balance += monthly;
+            cum += monthly;
+            balance *= (1 + rMo);
+        }
+        out.push({ year: yr, balance, totalContrib: cum, profit: balance - cum });
+    }
+    return out;
+}
+
 export const PERCENT_MODES = [
     "Bir sayının %X'i kaçtır?",
     "X, Y'nin yüzde kaçıdır?",
