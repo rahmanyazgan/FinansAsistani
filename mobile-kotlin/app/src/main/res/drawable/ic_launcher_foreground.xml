@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Finans Asistanı - ₺ sembolü -->
+    <path
+        android:fillColor="#00D4FF"
+        android:pathData="M54,20 C35.2,20 20,35.2 20,54 C20,72.8 35.2,88 54,88 C72.8,88 88,72.8 88,54 C88,35.2 72.8,20 54,20Z"/>
+    <path
+        android:fillColor="#050B14"
+        android:strokeColor="#050B14"
+        android:strokeWidth="1"
+        android:pathData="M46,38 L46,70 M46,54 L58,54 C63,54 67,50 67,45 C67,40 63,38 58,38 L46,38Z M41,60 L61,60 M41,66 L61,66"/>
+</vector>

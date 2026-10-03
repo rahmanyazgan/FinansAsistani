@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.FinansAsistani" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#00D4FF</item>
+        <item name="colorPrimaryVariant">#050B14</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSecondary">#00F5D4</item>
+        <item name="colorOnSecondary">#050B14</item>
+        <item name="android:windowBackground">#050B14</item>
+        <item name="android:statusBarColor">#050B14</item>
+        <item name="android:navigationBarColor">#0D1B2A</item>
+    </style>
+</resources>

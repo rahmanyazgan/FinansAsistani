@@ -1,0 +1,18 @@
+# EAS Build Ignore File (Git Root)
+.git
+.git/**
+node_modules
+node_modules/**
+.expo
+.expo/**
+*.apk
+*.aab
+*.tar.gz
+*.zip
+dist
+dist/**
+build
+build/**
+.venv
+.venv/**
+*.log
