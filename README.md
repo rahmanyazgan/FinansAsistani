@@ -1,6 +1,6 @@
 # 🏛️ Finans Asistanı
 
-**Finans Asistanı**, Python (PyQt5) ile masaüstünde ve React Native (Expo) ile **mobil cihazlarda (Android & iOS)** çalışan, modern ve kullanıcı dostu bir finansal hesaplama aracıdır. Günlük finansal işlemlerini ister bilgisayarında ister cebinde hızlıca halletmek isteyen kullanıcılar için tasarlanmış geniş kapsamlı özelliklere sahiptir.
+**Finans Asistanı**, Python (PyQt5) ile masaüstünde ve Native Android (Kotlin & Jetpack Compose) ile **mobil cihazlarda (Android)** çalışan, modern ve kullanıcı dostu bir finansal hesaplama aracıdır. Günlük finansal işlemlerini ister bilgisayarında ister cebinde hızlıca halletmek isteyen kullanıcılar için tasarlanmış geniş kapsamlı özelliklere sahiptir.
 
 ---
 
@@ -58,7 +58,7 @@ Uygulama, göz yormayan ve premium hissettiren 5 farklı tema seçeneği ile gel
 
 ### Yöntem 1: Doğrudan Kurulum (Hazır Paketler)
 *   💻 **Windows (.exe):** `dist/FinansAsistani.exe` dosyasını indirip hiçbir kurulum yapmadan doğrudan çalıştırabilirsin.
-*   📱 **Android (.apk):** `mobile/dist/FinansAsistani.apk` dosyasını indirip telefonuna kurarak mobil sürümü anında deneyimleyebilirsin.
+*   📱 **Android (.apk):** Proje içerisindeki `apk_yap.ps1` veya `apk_yap.bat` betiğini çalıştırarak kendi cihazınıza kurabileceğiniz APK dosyasını tek tıkla üretebilirsiniz (Detaylar Yöntem 4'te).
 
 ### Yöntem 2: Python ile (Kaynak Koddan)
 1. Python'ın yüklü olduğundan emin ol.
@@ -77,19 +77,14 @@ PyInstaller ile tek dosyalık çalıştırılabilir oluşturabilirsin:
 pyinstaller --onefile --noconsole --name "FinansAsistani" calculators.pyw
 ```
 
-### Yöntem 4: 📱 Mobil Uygulama (Expo Go)
-Masaüstü deneyimini cebine taşı! React Native ve Expo kullanılarak geliştirilen mobil sürümü saniyeler içinde telefonunda deneyebilirsin:
-1. Telefonuna **Expo Go** (App Store / Play Store) uygulamasını indir.
-2. Bilgisayarında `mobile` klasörüne gir:
-   ```bash
-   cd mobile
-   npm install
-   npm start
-   ```
-3. Terminalde çıkan **QR kodu** telefonundaki Expo Go uygulamasıyla tara.
-4. "Okyanus" temalı mobil dashboard anında telefonunda! ✨📱
+### Yöntem 4: 📱 Mobil Uygulama (Kotlin & Jetpack Compose)
+Masaüstü deneyimini cebine taşı! Modern Android geliştirme standartları (Kotlin ve Jetpack Compose) kullanılarak geliştirilen yüksek performanslı yerel (native) Android sürümünü saniyeler içinde derleyebilirsin.
 
-> **Not:** Expo Go ile test için Android Studio'ya gerek yoktur. Ancak APK/AAB oluşturmak istersen [Android Studio](https://developer.android.com/studio) kurulumu gerekir.
+Uygulamayı derlemek (APK veya AAB oluşturmak) için özel hazırlanmış, tek tıkla çalışan scriptler bulunur:
+1. **APK Oluşturmak İçin (Manuel Kurulum):** Proje içerisindeki `apk_yap.ps1` (veya `.bat`) dosyasını çalıştırın. Çıktı olarak `app-release.apk` dosyası üretilecektir.
+2. **Play Store (AAB) İçin:** Proje içerisindeki `aab_yap.ps1` (veya `.bat`) dosyasını çalıştırın. Çıktı olarak `app-release.aab` dosyası üretilecektir.
+
+> **Not:** Derleme işlemleri Gradle kullanır. Yerel ve ortak bir önbellek (`_cache`) mimarisi kullanılarak hızlı ve optimize bir derleme süreci sunulur. Test etmek için Android Studio kullanarak `mobile-kotlin` klasörünü açabilir ve doğrudan emülatörde çalıştırabilirsiniz.
 
 ---
 
