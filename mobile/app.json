@@ -12,9 +12,14 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rahmanyazgan.finansasistani",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
+      "package": "com.rahmanyazgan.finansasistani",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -27,7 +32,21 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
-    ]
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5adf4982-49c9-4647-9744-840e4f965711"
+      }
+    },
+    "owner": "rahmanyazgan"
   }
 }

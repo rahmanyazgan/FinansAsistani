@@ -1,7 +1,30 @@
 # Build and Distribution
 build/
+dist/
 __pycache__/
 *.spec
+*.apk
+*.aab
+*.tar.gz
+.venv/
+
+# Node / JS
+node_modules/
+.expo/
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Android / Gradle
+.gradle/
+*/.gradle/
+local.properties
+*/local.properties
+*/*/local.properties
+.cxx/
+captures/
+*.keystore
+*.jks
 
 # User Settings and Cache
 settings.json
@@ -13,3 +36,4 @@ rates_cache.json
 .gemini/
 .agent/
 .agents/
+*.iml

@@ -1,0 +1,35 @@
+# EAS Build Ignore File
+# Buluta yükleme boyutunu küçültmek ve build süresini hızlandırmak için gereksiz klasörler ve dosyalar hariç tutulur.
+
+# Git repository
+.git
+.git/**
+
+# Bağımlılıklar ve Geçici Paketler
+node_modules
+node_modules/**
+.expo
+.expo/**
+
+# Önceden üretilmiş APK ve AAB dosyaları (Devasa boyutu oluşturanlar)
+*.apk
+*.aab
+*.tar.gz
+*.zip
+
+# Derleme ve Çıktı Klasörleri
+dist
+dist/**
+build
+build/**
+web-build
+web-build/**
+android
+ios
+
+# Loglar ve Geçici Dosyalar
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.env*.local
