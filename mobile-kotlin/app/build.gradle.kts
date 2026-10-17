@@ -5,14 +5,22 @@ plugins {
 
 android {
     namespace = "com.rahmanyazgan.finansasistani"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.rahmanyazgan.finansasistani"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 4
+        versionName = "1.0.3"
+    }
+    signingConfigs {
+        create("release") {
+            storeFile = file("keystore.jks")
+            storePassword = "1e4e23452ab872f7750605b0b96de44d"
+            keyAlias = "01659a8da958cf7e0f4c196f2e9bcfb3"
+            keyPassword = "1d9dd98ec1f60c08f7fd1c210e2ac5fc"
+        }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -29,9 +37,10 @@ android {
     }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
