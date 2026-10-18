@@ -1,6 +1,16 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+}
+
+val localProps = Properties().apply {
+    val localPropsFile = rootProject.file("local.properties")
+    if (localPropsFile.exists()) {
+        load(FileInputStream(localPropsFile))
+    }
 }
 
 android {
@@ -11,15 +21,19 @@ android {
         applicationId = "com.rahmanyazgan.finansasistani"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.0.3"
+        versionCode = 5
+        versionName = "1.1"
     }
+
     signingConfigs {
         create("release") {
             storeFile = file("keystore.jks")
-            storePassword = "1e4e23452ab872f7750605b0b96de44d"
-            keyAlias = "01659a8da958cf7e0f4c196f2e9bcfb3"
-            keyPassword = "1d9dd98ec1f60c08f7fd1c210e2ac5fc"
+            storePassword = System.getenv("RELEASE_STORE_PASSWORD") 
+                ?: localProps.getProperty("RELEASE_STORE_PASSWORD", "")
+            keyAlias = System.getenv("RELEASE_KEY_ALIAS") 
+                ?: localProps.getProperty("RELEASE_KEY_ALIAS", "")
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD") 
+                ?: localProps.getProperty("RELEASE_KEY_PASSWORD", "")
         }
     }
     compileOptions {

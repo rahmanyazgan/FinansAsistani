@@ -25,6 +25,10 @@ local.properties
 captures/
 *.keystore
 *.jks
+*.pem
+credentials.json
+*/credentials.json
+*credentials*.json
 
 # User Settings and Cache
 settings.json
