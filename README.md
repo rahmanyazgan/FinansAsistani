@@ -84,7 +84,7 @@ Uygulamayı derlemek (APK veya AAB oluşturmak) için özel hazırlanmış, tek 
 1. **APK Oluşturmak İçin (Manuel Kurulum):** Proje içerisindeki `apk_yap.ps1` (veya `.bat`) dosyasını çalıştırın. Çıktı olarak `app-release.apk` dosyası üretilecektir.
 2. **Play Store (AAB) İçin:** Proje içerisindeki `aab_yap.ps1` (veya `.bat`) dosyasını çalıştırın. Çıktı olarak `app-release.aab` dosyası üretilecektir.
 
-> **Not:** Derleme işlemleri Gradle kullanır. Yerel ve ortak bir önbellek (`_cache`) mimarisi kullanılarak hızlı ve optimize bir derleme süreci sunulur. Test etmek için Android Studio kullanarak `mobile-kotlin` klasörünü açabilir ve doğrudan emülatörde çalıştırabilirsiniz.
+> **Not:** Derleme işlemleri Gradle kullanır. Test etmek için Android Studio kullanarak `mobile-kotlin` klasörünü açabilir ve doğrudan emülatörde çalıştırabilirsiniz.
 
 ---
 
