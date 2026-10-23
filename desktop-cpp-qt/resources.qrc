@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="icon.png">../assets/tax.png</file>
+    </qresource>
+</RCC>

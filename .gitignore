@@ -1,6 +1,8 @@
 # Build and Distribution
 build/
 dist/
+*/build/
+*/dist/
 __pycache__/
 *.spec
 *.apk

@@ -1,94 +1,92 @@
 # 🏛️ Finans Asistanı
 
-**Finans Asistanı**, Python (PyQt5) ile masaüstünde ve Native Android (Kotlin & Jetpack Compose) ile **mobil cihazlarda (Android)** çalışan, modern ve kullanıcı dostu bir finansal hesaplama aracıdır. Günlük finansal işlemlerini ister bilgisayarında ister cebinde hızlıca halletmek isteyen kullanıcılar için tasarlanmış geniş kapsamlı özelliklere sahiptir.
+**Finans Asistanı**, hem masaüstünde (**C++ / Qt 6** ve **Python / PyQt5**) hem de mobilde (**Native Android Kotlin** ve **React Native / Expo**) çalışan çok platformlu, modern ve kullanıcı dostu bir finansal hesaplama aracıdır.
+
+---
+
+## 📁 Proje Klasör Mimarisi
+
+| Klasör | Teknoloji | Açıklama |
+|---|---|---|
+| **[desktop-cpp-qt](file:///c:/Users/Rahman/source/apps/calculators/desktop-cpp-qt)** | C++17, Qt 6 Widgets | Yüksek performanslı masaüstü sürümü. Tek tıkla çalışan **13.8 MB** taşınabilir (portable single-file) `.exe` üretir. |
+| **[desktop-python-qt](file:///c:/Users/Rahman/source/apps/calculators/desktop-python-qt)** | Python 3, PyQt5 | İlk prototip ve PyQt5 tabanlı masaüstü hesaplama uygulaması. |
+| **[mobile-kotlin](file:///c:/Users/Rahman/source/apps/calculators/mobile-kotlin)** | Kotlin, Jetpack Compose | Modern Android standartlarında geliştirilmiş yerel (native) Android uygulaması. |
+| **[mobile-react](file:///c:/Users/Rahman/source/apps/calculators/mobile-react)** | React Native, TypeScript, Expo | Çift platform (Android & iOS) destekli mobil uygulama sürümü. |
+| **[assets](file:///c:/Users/Rahman/source/apps/calculators/assets)** | Ortak Kaynaklar | Uygulamaların ortak kullandığı ikonlar, logolar ve grafikler. |
 
 ---
 
 ## 🚀 Öne Çıkan Özellikler
 
 ### 1. 💱 Kur Dönüşümü
-*   **Canlı Veri:** `ExchangeRate API` üzerinden 150+ para birimi için anlık döviz kurları.
-*   **Arama ve Seçim:** Geniş para birimi listesi içinde hızlıca seçim yapabilme.
-*   **Hızlı Hesaplama:** Birim fiyatı girip saniyeler içinde karşılığını görme.
+* **Canlı Veri:** `ExchangeRate API` üzerinden 150+ para birimi için anlık döviz kurları.
+* **Akıllı Önbellek & Çevrimdışı Modu:** İnternet kesintilerinde yerel önbellekten son kurları kullanabilme.
+* **Hızlı Takas:** Tek butonla kaynak ve hedef kurları anında yer değiştirme.
 
-### 2. 🏛️ Vergi İadesi (Sigorta Prim Avantajı)
-*   **Maaş Etkisi:** Hayat ve Şahıs Sigorta primleriniz üzerinden aylık ne kadar vergi iadesi alacağınızı net olarak görün.
-*   **Vergi Dilimi Takibi:** Maaşınızın hangi ayda hangi vergi dilimine (%15, %20, %27, %35, %40) geçtiğini otomatik hesaplar.
-*   **Poliçe Yönetimi:** Birden fazla poliçeyi (USD veya TRY bazlı) tek bir hesaplamaya ekleme.
-*   **Detaylı Rapor:** ASCII tablo formatında şık aylık döküm ve kopyalanabilir sonuç ekranı.
+### 2. 🏛️ Vergi İadesi & Sigorta Prim İndirimi
+* **2026 Gelir Vergisi Dilimleri:** Ücretli ve ücret dışı çalışanlar için kümülatif dilim (%15, %20, %27, %35, %40) hesaplamaları.
+* **Dinamik Poliçe Yönetimi:** Birden fazla hayat ve sağlık poliçesini başlangıç ayı ve para birimiyle (TRY/USD) ekleyebilme.
+* **Aylık Net Bordro Yansıması:** Yıllık indirim sınırları ve her ay maaşa yansıyan net iade dökümü.
+* **Dashboard & Dışa Aktarma:** Grafik dökümü, ASCII tablo ve tek tıkla **PNG / PDF** formatında rapor kaydetme.
 
 ### 3. 📊 Yüzde Hesaplayıcı
-*   Değerin %X'i kaçtır?
-*   Değerden %X çıkarılırsa sonuç ne olur? (İndirim)
-*   Değere %X eklenirse sonuç ne olur? (Artış)
-*   Değer, diğer değerin yüzde kaçıdır?
-*   Bir değerden diğerine yüzde kaç değişim olmuştur?
+* Bir sayının %X'i kaçtır?
+* X, Y'nin yüzde kaçıdır?
+* Yüzde değişim (artış / azalış).
+* İki değer arası yüzdelik fark.
+* KDV dahil ↔ hariç dönüşümleri (%1, %10, %20).
 
 ### 4. 📈 Bileşik Kar Hesaplayıcı
-*   İlk yatırım, aylık katkı ve süre belirleyerek uzun vadeli birikim simülasyonu.
-*   Varyans aralığı (±%) ile düşük ve yüksek senaryo karşılaştırması.
-*   Günlük, Haftalık, Aylık, 3 Aylık, 6 Aylık veya Yıllık bileşik frekans seçimi.
-*   Yıllara göre bakiye gelişim grafiği ve detaylı yıllık döküm tablosu.
+* İlk yatırım, aylık katkı ve vadeye göre gelecekteki değer (FV) simülasyonu.
+* Günlük, haftalık, aylık ve yıllık bileşik frekans seçenekleri.
+* Varyans aralığı (±%) ile düşük ve yüksek piyasa senaryoları.
+* Etkileşimli büyüme grafiği ve yıllık döküm tablosu.
 
 ---
 
-## 🎨 Tema ve Görsel Deneyim
-Uygulama, göz yormayan ve premium hissettiren 5 farklı tema seçeneği ile gelir:
-*   **Okyanus (Varsayılan):** Modern lacivert ve turkuaz tonları.
-*   **Koyu Mavi:** Derin gece mavisi ve vurgulu renkler.
-*   **Sade:** Temiz beyaz ve mavi profesyonel görünüm.
-*   **Orman:** Rahatlatıcı yeşil tonları.
-*   **Günbatımı:** Turuncu ve morun sıcak uyumu.
-
----
-
-## 🛠️ Teknik Özellikler
-*   **Kaldığın Yerden Devam:** Uygulama, en son kullandığın temayı ve en son hangi sekmede (Kur, Yüzde, Vergi) olduğunu hatırlar.
-*   **Hız:** Tüm hesaplamalar yerel kod üzerinde milisaniyeler içinde gerçekleşir.
-
-![Kur Dönüşümü](assets/currency.png)
-
-![Vergi İadesi](assets/tax.png)
-
-![Mobil Görünüm (Android)](assets/tax_android.png)
+## 🎨 Tema Seçenekleri
+Göz yormayan 6 farklı modern tema desteği:
+* **Okyanus (Varsayılan)**
+* **Koyu Mavi**
+* **Mor Gece**
+* **Sade (Açık Tema)**
+* **Yeşil Orman**
+* **Gün Batımı**
 
 ---
 
 ## 📦 Kurulum ve Çalıştırma
 
-### Yöntem 1: Doğrudan Kurulum (Hazır Paketler)
-*   💻 **Windows (.exe):** `dist/FinansAsistani.exe` dosyasını indirip hiçbir kurulum yapmadan doğrudan çalıştırabilirsin.
-*   📱 **Android (.apk):** Proje içerisindeki `apk_yap.ps1` veya `apk_yap.bat` betiğini çalıştırarak kendi cihazınıza kurabileceğiniz APK dosyasını tek tıkla üretebilirsiniz (Detaylar Yöntem 4'te).
+### 1. 💻 Masaüstü C++ / Qt 6 (Önerilen)
+En hızlı ve en kompakt masaüstü deneyimi:
+```powershell
+cd desktop-cpp-qt
+.\build.ps1
+```
+* **Çıktı:** `desktop-cpp-qt/dist/FinansAsistani.exe` (Hiçbir harici DLL gerektirmeyen tek dosya, ~13.8 MB portable paket).
 
-### Yöntem 2: Python ile (Kaynak Koddan)
-1. Python'ın yüklü olduğundan emin ol.
-2. Gerekli kütüphaneleri yükle:
-   ```bash
-   pip install PyQt5 requests PyQtChart
-   ```
-3. Uygulamayı başlat:
-   ```bash
-   python calculators.pyw
-   ```
-
-### Yöntem 3: Kendin EXE Oluştur
-PyInstaller ile tek dosyalık çalıştırılabilir oluşturabilirsin:
+### 2. 🐍 Masaüstü Python / PyQt5
 ```bash
-pyinstaller --onefile --noconsole --name "FinansAsistani" calculators.pyw
+cd desktop-python-qt
+pip install PyQt5 requests PyQtChart
+python calculators.pyw
 ```
 
-### Yöntem 4: 📱 Mobil Uygulama (Kotlin & Jetpack Compose)
-Masaüstü deneyimini cebine taşı! Modern Android geliştirme standartları (Kotlin ve Jetpack Compose) kullanılarak geliştirilen yüksek performanslı yerel (native) Android sürümünü saniyeler içinde derleyebilirsin.
+### 3. 📱 Mobil Native Android (Kotlin & Jetpack Compose)
+`mobile-kotlin` klasörünü Android Studio ile açabilir veya kökteki betikleri kullanabilirsiniz:
+* **APK Üretimi:** `apk_yap.ps1`
+* **Google Play (AAB) Üretimi:** `aab_yap.ps1`
 
-Uygulamayı derlemek (APK veya AAB oluşturmak) için özel hazırlanmış, tek tıkla çalışan scriptler bulunur:
-1. **APK Oluşturmak İçin (Manuel Kurulum):** Proje içerisindeki `apk_yap.ps1` (veya `.bat`) dosyasını çalıştırın. Çıktı olarak `app-release.apk` dosyası üretilecektir.
-2. **Play Store (AAB) İçin:** Proje içerisindeki `aab_yap.ps1` (veya `.bat`) dosyasını çalıştırın. Çıktı olarak `app-release.aab` dosyası üretilecektir.
-
-> **Not:** Derleme işlemleri Gradle kullanır. Test etmek için Android Studio kullanarak `mobile-kotlin` klasörünü açabilir ve doğrudan emülatörde çalıştırabilirsiniz.
+### 4. ⚛️ Mobil React Native & Expo
+```bash
+cd mobile-react
+npm install
+npx expo start
+```
 
 ---
 
-## 📜 Lisans
-Bu proje geliştirme ve kişisel kullanım amaçlıdır. Verilerin doğruluğu için lütfen resmi finansal kaynakları da kontrol ediniz.
+## 📜 Lisans & Bilgi
+Bu proje geliştirme ve kişisel kullanım amaçlıdır.
 
 **Geliştirici:** Rahman Yazgan (rahmanyazgan@hotmail.com)
