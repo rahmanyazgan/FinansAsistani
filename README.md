@@ -89,4 +89,4 @@ npx expo start
 ## 📜 Lisans & Bilgi
 Bu proje geliştirme ve kişisel kullanım amaçlıdır.
 
-**Geliştirici:** Rahman Yazgan (rahmanyazgan@hotmail.com)
+**Geliştirici:** Rahman Yazgan (rahmanyazgan@gmail.com)
